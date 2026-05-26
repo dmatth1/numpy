@@ -1,3 +1,6 @@
+#ifndef NUMPY_SRC_COMMON_NPYSORT_RADIXSORT_HPP
+#define NUMPY_SRC_COMMON_NPYSORT_RADIXSORT_HPP
+
 #define NPY_NO_DEPRECATED_API NPY_API_VERSION
 
 #include "npy_sort.h"
@@ -249,3 +252,5 @@ aradixsort_impl(void *start, npy_intp *tosort, npy_intp num, void *NPY_UNUSED(va
 {
     return aradixsort<type, reverse>(start, tosort, num);
 }
+
+#endif  // NUMPY_SRC_COMMON_NPYSORT_RADIXSORT_HPP

@@ -7,6 +7,7 @@
 #include "numpy_tag.h"
 #include "x86_simd_qsort.hpp"
 #include "highway_qsort.hpp"
+#include "radixsort.hpp"   // scalar radix argsort (aradixsort) for the non-x86 argsort path
 
 #include <cstdlib>
 #include <utility>
@@ -68,6 +69,47 @@ inline bool quicksort_dispatch(T *start, npy_intp num)
     return false;
 }
 
+// Radix argsort is run-blind, so it only pays off on disordered data; ordered input
+// (sorted / near-sorted / reverse) is faster with the comparison sort. Decide with two
+// cheap signals: an adjacent-descent count (a mid-band fraction => random), and, only for
+// the ambiguous low-descent case, a global trend over 32 block means -- flat means "few
+// long runs that sawtooth" (e.g. interleaved sorted blocks: few descents but slow to
+// compare), monotonic means genuinely near-sorted.
+template <typename T>
+static bool
+radix_argsort_profitable(const T *a, npy_intp n)
+{
+    npy_intp descents = 0;
+    for (npy_intp i = 1; i < n; i++) {
+        descents += (a[i - 1] > a[i]);
+    }
+    npy_intp margin = n >> 4;  // ~6% band at each end
+    if (descents > margin && descents < n - margin) {
+        return true;  // high entropy (random)
+    }
+    if (descents == 0 || descents == n - 1) {
+        return false;  // sorted / reverse
+    }
+    constexpr int NB = 32;
+    npy_intp bs = n / NB, i = 0;
+    int td = 0, ta = 0;
+    double prev = 0.0;
+    for (int b = 0; b < NB; b++) {
+        npy_intp end = (b == NB - 1) ? n : (b + 1) * bs;
+        double sum = 0.0;
+        for (; i < end; i++) {
+            sum += (double)a[i];
+        }
+        double mean = sum / (double)(end - (npy_intp)b * bs);
+        if (b) {
+            if (prev > mean) td++;
+            else if (prev < mean) ta++;
+        }
+        prev = mean;
+    }
+    return td > 2 && ta > 2;  // no global trend => disordered enough for radix
+}
+
 template<typename Tag, typename T, bool reverse>
 inline bool aquicksort_dispatch(T *start, npy_intp* arg, npy_intp num)
 {
@@ -78,6 +120,7 @@ inline bool aquicksort_dispatch(T *start, npy_intp* arg, npy_intp num)
         std::is_base_of_v<npy::integral_tag, Tag>)
         && !reverse // x86 SIMD argsort is ascending-only
     ) {
+#if defined(NPY_CPU_AMD64) || defined(NPY_CPU_X86)  // x86: AVX2/AVX-512 SIMD argsort
         using TF = typename np::meta::FixedWidth<T>::Type;
         void (*dispfunc)(TF*, npy_intp*, npy_intp, bool) = nullptr;
         if constexpr (sizeof(T) == sizeof(uint32_t) || sizeof(T) == sizeof(uint64_t)) {
@@ -88,6 +131,21 @@ inline bool aquicksort_dispatch(T *start, npy_intp* arg, npy_intp num)
             (*dispfunc)(reinterpret_cast<TF*>(start), arg, num, reverse);
             return true;
         }
+#else
+        // No SIMD argsort on non-x86 (x86-simd-sort is x86-only; Highway's key-value VQSort
+        // argsort does not vectorize on NEON, gh-28416). For integer keys a scalar radix
+        // argsort beats the comparison sort on disordered data. Validated on aarch64.
+        if constexpr (std::is_base_of_v<npy::integral_tag, Tag>) {
+            constexpr npy_intp radix_min_n = (npy_intp)1 << 14;  // below this, comparison wins
+            if (num >= radix_min_n && radix_argsort_profitable(start, num)) {
+                // aradixsort leaves `arg` untouched and returns < 0 on allocation failure,
+                // so we fall through to the comparison sort in that case.
+                if (aradixsort<T>(reinterpret_cast<void *>(start), arg, num) == 0) {
+                    return true;
+                }
+            }
+        }
+#endif
     }
 #endif // __CYGWIN__
     (void)start; (void)arg; (void)num; // to avoid unused arg warn
