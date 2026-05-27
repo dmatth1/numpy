@@ -1,0 +1,194 @@
+# Raw partition benchmark data: x86 scalar vs Intel SIMD
+# Generated on Intel Xeon AVX-512, numpy 2.6.0.dev0
+# Scalar forced via NPY_DISABLE_CPU_FEATURES="X86_V3 X86_V4 AVX512_ICL AVX512_SPR"
+
+================================================================
+SECTION 1: bench_function_base.Partition.time_partition (size=100000)
+  speedup = SCALAR / SIMD  (>1 means Intel SIMD faster)
+================================================================
+   dtype       array_type     k    SIMD_us  SCALAR_us  speedup
+----------------------------------------------------------------
+ float16          ordered    10       91.7      317.0    3.46x
+ float16          ordered   100       92.8      319.0    3.44x
+ float16          ordered  1000       93.7      335.0    3.58x
+ float16           random    10      103.0     1140.0   11.07x
+ float16           random   100      101.0     1140.0   11.29x
+ float16           random  1000       98.6     1150.0   11.66x
+ float16         reversed    10      123.0     1880.0   15.28x
+ float16         reversed   100      123.0     1890.0   15.37x
+ float16         reversed  1000      124.0     1880.0   15.16x
+ float16  sorted_block/10    10       92.9      340.0    3.66x
+ float16  sorted_block/10   100       92.3      341.0    3.69x
+ float16  sorted_block/10  1000       93.0      357.0    3.84x
+ float16 sorted_block/100    10       92.9      316.0    3.40x
+ float16 sorted_block/100   100       92.8      318.0    3.43x
+ float16 sorted_block/100  1000       95.4      507.0    5.31x
+ float16 sorted_block/1000    10       91.2      352.0    3.86x
+ float16 sorted_block/1000   100       92.3      357.0    3.87x
+ float16 sorted_block/1000  1000       91.7      562.0    6.13x
+ float16          uniform    10       76.9      193.0    2.51x
+ float16          uniform   100       77.8      191.0    2.46x
+ float16          uniform  1000       77.1      191.0    2.48x
+ float32          ordered    10      119.0      127.0    1.07x
+ float32          ordered   100      121.0      127.0    1.05x
+ float32          ordered  1000      120.0      166.0    1.38x
+ float32           random    10      128.0      772.0    6.03x
+ float32           random   100      127.0      764.0    6.02x
+ float32           random  1000      129.0      774.0    6.00x
+ float32         reversed    10      152.0     1280.0    8.42x
+ float32         reversed   100      154.0     1210.0    7.86x
+ float32         reversed  1000      153.0     1230.0    8.04x
+ float32  sorted_block/10    10      127.0      440.0    3.46x
+ float32  sorted_block/10   100      126.0      444.0    3.52x
+ float32  sorted_block/10  1000      127.0      454.0    3.57x
+ float32 sorted_block/100    10      119.0      214.0    1.80x
+ float32 sorted_block/100   100      118.0      212.0    1.80x
+ float32 sorted_block/100  1000      120.0      214.0    1.78x
+ float32 sorted_block/1000    10      120.0      179.0    1.49x
+ float32 sorted_block/1000   100      118.0      181.0    1.53x
+ float32 sorted_block/1000  1000      119.0      419.0    3.52x
+ float32          uniform    10      105.0      318.0    3.03x
+ float32          uniform   100      102.0      328.0    3.22x
+ float32          uniform  1000      103.0      352.0    3.42x
+ float64          ordered    10      148.0      174.0    1.18x
+ float64          ordered   100      144.0      170.0    1.18x
+ float64          ordered  1000      145.0      169.0    1.17x
+ float64           random    10      142.0      789.0    5.56x
+ float64           random   100      139.0      797.0    5.73x
+ float64           random  1000      139.0      784.0    5.64x
+ float64         reversed    10      165.0     1620.0    9.82x
+ float64         reversed   100      167.0     1640.0    9.82x
+ float64         reversed  1000      166.0     1600.0    9.64x
+ float64  sorted_block/10    10      140.0      506.0    3.61x
+ float64  sorted_block/10   100      140.0      512.0    3.66x
+ float64  sorted_block/10  1000      141.0      521.0    3.70x
+ float64 sorted_block/100    10      173.0      290.0    1.68x
+ float64 sorted_block/100   100      175.0      297.0    1.70x
+ float64 sorted_block/100  1000      172.0      290.0    1.69x
+ float64 sorted_block/1000    10      154.0      247.0    1.60x
+ float64 sorted_block/1000   100      157.0      245.0    1.56x
+ float64 sorted_block/1000  1000      154.0      548.0    3.56x
+ float64          uniform    10      113.0      367.0    3.25x
+ float64          uniform   100      115.0      368.0    3.20x
+ float64          uniform  1000      115.0      359.0    3.12x
+   int16          ordered    10       36.0       99.6    2.77x
+   int16          ordered   100       35.3      101.0    2.86x
+   int16          ordered  1000       34.6       99.8    2.88x
+   int16           random    10       36.1     1010.0   27.98x
+   int16           random   100       36.4     1020.0   28.02x
+   int16           random  1000       36.3     1030.0   28.37x
+   int16         reversed    10       67.6      911.0   13.48x
+   int16         reversed   100       67.1      914.0   13.62x
+   int16         reversed  1000       66.4      932.0   14.04x
+   int16  sorted_block/10    10       33.7      449.0   13.32x
+   int16  sorted_block/10   100       34.5      452.0   13.10x
+   int16  sorted_block/10  1000       34.1      494.0   14.49x
+   int16 sorted_block/100    10       33.8      451.0   13.34x
+   int16 sorted_block/100   100       34.2      451.0   13.19x
+   int16 sorted_block/100  1000       33.8      462.0   13.67x
+   int16 sorted_block/1000    10       33.7      237.0    7.03x
+   int16 sorted_block/1000   100       34.1      236.0    6.92x
+   int16 sorted_block/1000  1000       34.6      285.0    8.24x
+   int16          uniform    10       20.2      134.0    6.63x
+   int16          uniform   100       19.9      136.0    6.83x
+   int16          uniform  1000       19.8      146.0    7.37x
+   int32          ordered    10       41.6       98.9    2.38x
+   int32          ordered   100       41.9       98.4    2.35x
+   int32          ordered  1000       40.3       97.9    2.43x
+   int32           random    10       48.5      599.0   12.35x
+   int32           random   100       49.3      597.0   12.11x
+   int32           random  1000       47.7      597.0   12.52x
+   int32         reversed    10       69.7      947.0   13.59x
+   int32         reversed   100       70.5      964.0   13.67x
+   int32         reversed  1000       69.9      951.0   13.61x
+   int32  sorted_block/10    10       49.5      305.0    6.16x
+   int32  sorted_block/10   100       49.6      306.0    6.17x
+   int32  sorted_block/10  1000       50.0      313.0    6.26x
+   int32 sorted_block/100    10       40.2      155.0    3.86x
+   int32 sorted_block/100   100       40.8      152.0    3.73x
+   int32 sorted_block/100  1000       40.6      153.0    3.77x
+   int32 sorted_block/1000    10       41.4      146.0    3.53x
+   int32 sorted_block/1000   100       41.2      145.0    3.52x
+   int32 sorted_block/1000  1000       41.9      287.0    6.85x
+   int32          uniform    10       26.2      164.0    6.26x
+   int32          uniform   100       25.7      166.0    6.46x
+   int32          uniform  1000       26.0      164.0    6.31x
+   int64          ordered    10       97.0      141.0    1.45x
+   int64          ordered   100       98.1      147.0    1.50x
+   int64          ordered  1000      100.0      146.0    1.46x
+   int64           random    10       89.2      645.0    7.23x
+   int64           random   100       89.7      649.0    7.24x
+   int64           random  1000       90.2      648.0    7.18x
+   int64         reversed    10      118.0     1070.0    9.07x
+   int64         reversed   100      117.0     1000.0    8.55x
+   int64         reversed  1000      118.0      988.0    8.37x
+   int64  sorted_block/10    10       90.6      398.0    4.39x
+   int64  sorted_block/10   100       88.8      399.0    4.49x
+   int64  sorted_block/10  1000       88.7      410.0    4.62x
+   int64 sorted_block/100    10      131.0      198.0    1.51x
+   int64 sorted_block/100   100      133.0      198.0    1.49x
+   int64 sorted_block/100  1000      130.0      199.0    1.53x
+   int64 sorted_block/1000    10      111.0      182.0    1.64x
+   int64 sorted_block/1000   100      109.0      181.0    1.66x
+   int64 sorted_block/1000  1000      108.0      370.0    3.43x
+   int64          uniform    10       58.2      185.0    3.18x
+   int64          uniform   100       58.4      182.0    3.12x
+   int64          uniform  1000       59.8      189.0    3.16x
+
+# SIMD slower than scalar (regressions, speedup<1):
+  none
+
+================================================================
+SECTION 2: size sweep 1024 -> 10M (random, k=100)
+  speedup = SCALAR / SIMD  (>1 means Intel SIMD faster)
+================================================================
+   dtype      size    SIMD_us  SCALAR_us  speedup  note
+------------------------------------------------------------
+   int16      1024       1.58       2.78    1.76x  
+   int16      4096       2.93       6.20    2.12x  
+   int16      8192       4.19      30.02    7.16x  
+   int16     16384       6.37      76.20   11.97x  
+   int16     65536      24.67     492.65   19.97x  
+   int16    100000      35.10     997.99   28.43x  
+   int16   1000000     372.23    2755.20    7.40x  
+   int16  10000000    3887.85   63362.98   16.30x  
+ float16      1024       2.33       4.38    1.88x  
+ float16      4096       5.55      11.32    2.04x  
+ float16      8192       9.02      32.75    3.63x  
+ float16     16384      15.35     128.74    8.39x  
+ float16     65536      60.62     682.04   11.25x  
+ float16    100000      94.11    1122.76   11.93x  
+ float16   1000000     920.40    7511.49    8.16x  
+ float16  10000000   10124.06   99497.02    9.83x  
+   int32      1024       1.96       2.90    1.48x  
+   int32      4096       3.33       6.79    2.04x  
+   int32      8192       5.19      35.17    6.78x  
+   int32     16384       7.41      72.17    9.74x  
+   int32     65536      27.10     596.40   22.01x  
+   int32    100000      47.72     587.04   12.30x  
+   int32   1000000     697.04    2334.01    3.35x  
+   int32  10000000   23085.22   78499.60    3.40x  
+ float32      1024       2.71       4.03    1.48x  
+ float32      4096       6.51      10.44    1.60x  
+ float32      8192      11.37      87.32    7.68x  
+ float32     16384      20.44     140.42    6.87x  
+ float32     65536      78.47     785.97   10.02x  
+ float32    100000     125.70     774.13    6.16x  
+ float32   1000000    1414.53    2981.00    2.11x  
+ float32  10000000   31136.65   95733.99    3.07x  
+   int64      1024       2.51       3.19    1.27x  
+   int64      4096       4.49       8.42    1.88x  
+   int64      8192       9.31      62.01    6.66x  
+   int64     16384      14.96     111.63    7.46x  
+   int64     65536      72.16     637.78    8.84x  
+   int64    100000      87.23     627.92    7.20x  
+   int64   1000000    1704.97    2925.06    1.72x  
+   int64  10000000   47874.60  114207.62    2.39x  
+ float64      1024       2.87       4.31    1.50x  
+ float64      4096       6.55      11.58    1.77x  
+ float64      8192      13.74      54.98    4.00x  
+ float64     16384      23.71     119.35    5.03x  
+ float64     65536     105.72     772.25    7.30x  
+ float64    100000     137.45     782.92    5.70x  
+ float64   1000000    2253.36    3381.38    1.50x  
+ float64  10000000   56679.37  129142.92    2.28x  
